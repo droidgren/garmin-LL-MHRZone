@@ -1,0 +1,43 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Device Matrix: Core",
+			"type": "shell",
+			"command": "$cfgPath = '.\\LastLapMaxHRZone\\.vscode\\ciq.local.json'; if (-not (Test-Path $cfgPath)) { Write-Error 'Missing LastLapMaxHRZone/.vscode/ciq.local.json. Run task: Configure CIQ SDK + Key (once) in LastLapMaxHRZone'; exit 1 }; $cfg = Get-Content $cfgPath -Raw | ConvertFrom-Json; $sdk = $cfg.sdkHome; $key = $cfg.devKey; if (-not (Test-Path \"$sdk\\bin\\monkeyc.bat\")) { Write-Error \"monkeyc.bat not found under $sdk\\bin\"; exit 1 }; if (-not (Test-Path $key)) { Write-Error \"Developer key not found: $key\"; exit 1 }; & \".\\scripts\\Test-ConnectIQDeviceMatrix.ps1\" -ProjectPath \".\\LastLapMaxHRZone\" -MonkeyCPath \"$sdk\\bin\\monkeyc.bat\" -DeveloperKeyPath $key -Mode Core",
+			"group": "build"
+		},
+		{
+			"label": "Device Matrix: Manifest",
+			"type": "shell",
+			"command": "$cfgPath = '.\\LastLapMaxHRZone\\.vscode\\ciq.local.json'; if (-not (Test-Path $cfgPath)) { Write-Error 'Missing LastLapMaxHRZone/.vscode/ciq.local.json. Run task: Configure CIQ SDK + Key (once) in LastLapMaxHRZone'; exit 1 }; $cfg = Get-Content $cfgPath -Raw | ConvertFrom-Json; $sdk = $cfg.sdkHome; $key = $cfg.devKey; if (-not (Test-Path \"$sdk\\bin\\monkeyc.bat\")) { Write-Error \"monkeyc.bat not found under $sdk\\bin\"; exit 1 }; if (-not (Test-Path $key)) { Write-Error \"Developer key not found: $key\"; exit 1 }; & \".\\scripts\\Test-ConnectIQDeviceMatrix.ps1\" -ProjectPath \".\\LastLapMaxHRZone\" -MonkeyCPath \"$sdk\\bin\\monkeyc.bat\" -DeveloperKeyPath $key -Mode Manifest",
+			"group": "build"
+		},
+		{
+			"label": "Device Matrix: Both",
+			"type": "shell",
+			"command": "$cfgPath = '.\\LastLapMaxHRZone\\.vscode\\ciq.local.json'; if (-not (Test-Path $cfgPath)) { Write-Error 'Missing LastLapMaxHRZone/.vscode/ciq.local.json. Run task: Configure CIQ SDK + Key (once) in LastLapMaxHRZone'; exit 1 }; $cfg = Get-Content $cfgPath -Raw | ConvertFrom-Json; $sdk = $cfg.sdkHome; $key = $cfg.devKey; if (-not (Test-Path \"$sdk\\bin\\monkeyc.bat\")) { Write-Error \"monkeyc.bat not found under $sdk\\bin\"; exit 1 }; if (-not (Test-Path $key)) { Write-Error \"Developer key not found: $key\"; exit 1 }; & \".\\scripts\\Test-ConnectIQDeviceMatrix.ps1\" -ProjectPath \".\\LastLapMaxHRZone\" -MonkeyCPath \"$sdk\\bin\\monkeyc.bat\" -DeveloperKeyPath $key -Mode Both",
+			"group": "build"
+		},
+		{
+			"label": "Launch Simulator (Chosen Device)",
+			"type": "shell",
+			"command": "$device = '${input:simDeviceId}'; if ([string]::IsNullOrWhiteSpace($device)) { Write-Error 'Device id is required'; exit 1 }; $cfgPath = '.\\LastLapMaxHRZone\\.vscode\\ciq.local.json'; if (-not (Test-Path $cfgPath)) { Write-Error 'Missing LastLapMaxHRZone/.vscode/ciq.local.json. Run task: Configure CIQ SDK + Key (once) in LastLapMaxHRZone'; exit 1 }; $cfg = Get-Content $cfgPath -Raw | ConvertFrom-Json; $sdk = $cfg.sdkHome; $key = $cfg.devKey; if (-not (Test-Path \"$sdk\\bin\\monkeyc.bat\")) { Write-Error \"monkeyc.bat not found under $sdk\\bin\"; exit 1 }; if (-not (Test-Path \"$sdk\\bin\\monkeydo.bat\")) { Write-Error \"monkeydo.bat not found under $sdk\\bin\"; exit 1 }; if (-not (Test-Path \"$sdk\\bin\\simulator.exe\")) { Write-Error \"simulator.exe not found under $sdk\\bin\"; exit 1 }; if (-not (Test-Path $key)) { Write-Error \"Developer key not found: $key\"; exit 1 }; Push-Location .\\LastLapMaxHRZone; try { & \"$sdk\\bin\\monkeyc.bat\" -f monkey.jungle -o \".\\bin\\sim-$device.prg\" -d $device -w -y $key; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }; if (-not (Get-Process -Name simulator -ErrorAction SilentlyContinue)) { Start-Process -FilePath \"$sdk\\bin\\simulator.exe\"; Start-Sleep -Seconds 4 }; & \"$sdk\\bin\\monkeydo.bat\" \".\\bin\\sim-$device.prg\" $device; exit $LASTEXITCODE } finally { Pop-Location }",
+			"group": "test"
+		},
+		{
+			"label": "Export IQ Package",
+			"type": "shell",
+			"command": "$cfgPath = '.\\LastLapMaxHRZone\\.vscode\\ciq.local.json'; if (-not (Test-Path $cfgPath)) { Write-Error 'Missing LastLapMaxHRZone/.vscode/ciq.local.json. Run task: Configure CIQ SDK + Key (once) in LastLapMaxHRZone'; exit 1 }; $cfg = Get-Content $cfgPath -Raw | ConvertFrom-Json; $sdk = $cfg.sdkHome; $key = $cfg.devKey; if (-not (Test-Path \"$sdk\\bin\\monkeyc.bat\")) { Write-Error \"monkeyc.bat not found under $sdk\\bin\"; exit 1 }; if (-not (Test-Path $key)) { Write-Error \"Developer key not found: $key\"; exit 1 }; Push-Location .\\LastLapMaxHRZone; try { & \"$sdk\\bin\\monkeyc.bat\" -f monkey.jungle -o \".\\bin\\LastLapMaxHRZone.iq\" -y $key -e -r; exit $LASTEXITCODE } finally { Pop-Location }",
+			"group": "build"
+		}
+	],
+	"inputs": [
+		{
+			"id": "simDeviceId",
+			"type": "promptString",
+			"description": "Connect IQ device id to simulate (example: fr55, fr265, edge130)",
+			"default": "fr55"
+		}
+	]
+}
