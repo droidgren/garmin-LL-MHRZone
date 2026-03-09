@@ -1,5 +1,10 @@
 # Release Notes
 
+## 1.0.1 (2026-03-09)
+
+- Added a setting to enable or disable the `LL Max HRZ` header text (default ON)
+- Existing max HR zone calculation and digit color behavior remain unchanged
+
 ## 1.0.0 (2026-03-05)
 
 - Initial release of Last Lap Max HR

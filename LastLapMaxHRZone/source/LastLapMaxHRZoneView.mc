@@ -86,7 +86,7 @@ class LastLapMaxHRZoneView extends WatchUi.DataField {
 
         var width = dc.getWidth();
         var height = dc.getHeight();
-        var showLabel = height >= 40;
+        var showLabel = (height >= 40) && isHeaderTextEnabled();
         var labelFont = Graphics.FONT_XTINY;
         var valueFont = getValueFont(height);
         var labelHeight = showLabel ? dc.getFontHeight(labelFont) : 0;
@@ -121,6 +121,18 @@ class LastLapMaxHRZoneView extends WatchUi.DataField {
     hidden function isZoneColorEnabled() as Boolean {
         try {
             var value = Application.Properties.getValue("zone_color_digits");
+            if (value != null) {
+                return value as Boolean;
+            }
+        } catch (e) {
+        }
+
+        return true;
+    }
+
+    hidden function isHeaderTextEnabled() as Boolean {
+        try {
+            var value = Application.Properties.getValue("show_header_text");
             if (value != null) {
                 return value as Boolean;
             }
