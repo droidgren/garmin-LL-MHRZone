@@ -6,6 +6,16 @@ Connect IQ data field that displays the maximum heart rate zone from your last c
 
 - `1.0.1` (2026-03-09)
 
+## Garmin Connect IQ Store
+
+- App page: <https://apps.garmin.com/apps/4c9e0ac0-dc40-4ae1-abb9-198f0cbeb1c4>
+
+<img src="store/screenshots/wide_cover.png" alt="Wide Cover" width="600">
+
+<img src="store/screenshots/screenshot.png" alt="App Screenshot" width="200">
+
+
+
 ## What It Does
 
 - Tracks the peak heart rate during the current lap
